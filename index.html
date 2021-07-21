@@ -1,0 +1,120 @@
+<!DOCTYPE html> 
+<html> 
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js" integrity="sha512-hZf9Qhp3rlDJBvAKvmiG+goaaKRZA6LKUO35oK6EsM0/kjPK32Yw7URqrq3Q+Nvbbt8Usss+IekL7CRn83dYmw==" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.css" integrity="sha512-C7hOmCgGzihKXzyPU/z4nv97W0d9bv4ALuuEbSf6hm93myico9qa0hv4dODThvCsqQUmKmLcJmlpRmCaApr83g==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js" integrity="sha512-hZf9Qhp3rlDJBvAKvmiG+goaaKRZA6LKUO35oK6EsM0/kjPK32Yw7URqrq3Q+Nvbbt8Usss+IekL7CRn83dYmw==" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
+    
+  
+<head> 
+    <title>WhatsApp Chat Activity</title> 
+</head> 
+  
+<body> 
+    <input type="file" name="inputfile"
+            id="inputfile"> 
+    
+    <br>
+    <br>
+    <div class="row">
+        <div class="column" style="width: 10%;float: left;">
+            <label style="width: 50%;">Date &nbsp;: </label><label id='dateValue' style="width: 50%;float: right;"></label>
+            <br>
+            <label style="width: 50%;">Speed: </label><label id='speedValue' style="width: 50%;float: right;"></label>
+        </div>
+        <div class="column" style="width: 85%;float: left;">
+            <input id='dateSlider' type="range" min=0 max=0 oninput="" value=0 style="margin-left: 0%;margin-right: 5%;width: 90%;"><br>
+            <input id='speedSlider' type="range" min=0 max=10 oninput="" value=5 style="margin-left: 0%;width: 20%;">
+            <script>
+                s = document.getElementById('speedSlider')
+                s.addEventListener('input',function(){
+                    togglePlay(document.getElementById('play').checked,true)
+                    document.getElementById('speedValue').innerHTML = document.getElementById('speedSlider').value
+                })
+
+                
+            </script>
+        </div>
+    </div>
+    
+<br>
+<br>
+<br>
+<br>
+    
+    <div class='row'>
+        <div class="column" style="width: 15%;float: left;">
+            <div style="margin-left: 10%;margin-top: 30%;">
+                <h4>Graph Type:</h4>
+                <input id="msgcount" name="graphdata" type="radio" onchange="changeGraphData('count')" checked=true>
+                <label for="graphdata">Show count graph</label><br><br>
+                <input id="proportion" name="graphdata" type="radio" onchange="changeGraphData('proportion')">
+                <label for="graphdata">Show proportion graph</label>
+                <br><br><br>
+                <h4>Graph Content:</h4>
+                <input id="messages" name="graphType" type="radio" onchange="changeGraph('messages')" checked=true>
+                <label for="messages">Show graph for MESSAGES</label><br><br>
+                <input id="words" name="graphType" type="radio" onchange="changeGraph('words')">
+                <label for="words">Show graph for WORDS</label>
+                <br><br><br>
+                <h4>Custom Filters:</h4>
+                <input id="play" name="play" type="checkbox" onchange="togglePlay(this.checked)">
+                <label for="play">Play</label><br><br>
+                <input id="totals" name="totals" type="checkbox" onchange="updateOnce()" checked="true">
+                <label for="totals">Show total count alongside</label>
+                <br><br>
+                <input id="numbers" name="numbers" type="checkbox" onchange="updateOnce()" checked="true">
+                <label for="numbers">Show numbers</label>
+                <br><br>
+                <input id="top3" name="top3" type="checkbox" onchange="updateOnce();">
+                <label for="top3">Show top 3</label>
+                <br><br>
+                <div id="filterPeople">
+                    <h4>Filter Members:</h4>
+                    
+                    <div id="filter-content">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+            <canvas class="column" id="myChart" style="float:left;margin-left: 15%;margin-right: 5%;width: 80%;position: absolute;"></canvas>
+
+    </div>
+    <br>
+    
+</body> 
+
+<script src="script.js"></script>
+  
+</html>
+
+<style>
+.mbsc-padding.md-header {
+    font-size: 1.25em;
+    font-weight: 400;
+    padding: .8em .8em .4em .8em;
+}
+
+.md-dateslider .mbsc-padding {
+    text-align: center;
+}
+
+.md-check-cont {
+    padding: 8px 0 16px 0;
+}
+
+.md-check {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    font-size: 26px;
+    padding: .2em;
+    line-height: 23px;
+    border-radius: 33px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+</style>
+
