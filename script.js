@@ -84,15 +84,18 @@ function prevDate(d){
     return arr[0]+'/'+arr[1]+'/'+arr[2]
 }
 
-message_regex = /\d{2}\/\d{2}\/\d{4}, \d+:\d+ [ap]m - [a-zA-Z 0-9+]+:/g
-word_regex = /\d{2}\/\d{2}\/\d{4}, \d+:\d+ [ap]m - [a-zA-Z 0-9+]+: ([\s\S]*?)\d{2}\/\d{2}\/\d{4}, \d+:\d+ [ap]m - [a-zA-Z 0-9+]+: /g
-date_regex = /\d{2}\/\d{2}\/\d{4}/g
+// message_regex = /\d{2}\/\d{2}\/\d{4}, \d+:\d+ [ap]m - [a-zA-Z 0-9+]+:/g
+// word_regex = /\d{2}\/\d{2}\/\d{4}, \d+:\d+ [ap]m - [a-zA-Z 0-9+]+: ([\s\S]*?)\d{2}\/\d{2}\/\d{4}, \d+:\d+ [ap]m - [a-zA-Z 0-9+]+: /g
+// date_regex = /\d{2}\/\d{2}\/\d{4}/g
+message_regex = /[[]\d{2}\/\d{2}\/\d{2}, \d{2}:\d{2}:\d{2}[\]] [a-zA-Z 0-9+]+:/g
+word_regex = /[[]\d{2}\/\d{2}\/\d{2}, \d{2}:\d{2}:\d{2}[\]] [a-zA-Z 0-9+]+: ([\s\S]*?)[[]\d{2}\/\d{2}\/\d{2}, \d{2}:\d{2}:\d{2}[\]] [a-zA-Z 0-9+]+: /g
+date_regex = /\d{2}\/\d{2}\/\d{2}/g
     
 
 // const start_date = '30/11/2019'
 // const end_date = '28/11/2020'
 
-const omit_members = new Set(['Ravitha'])
+const omit_members = new Set()
 
 // const members = {'+33 7 49 35 94 20':0,'Akshaya':0,'Anjali Dalmia':1,'Dhruva Panyam':2,'Hari':3,'Nishant':4,'Parul Joshi':5,'Rasika':6,'Rathi':7,'Rishy':8,'Rohan Manoj':9,'Uttara':10,'Vidur':11}
 members = {}
@@ -104,7 +107,9 @@ function startAnalysis(group){
 
     myChart.options.title.text = 'Time Animations - '+group
 
+    // console.log(chat)
     dates = chat.match(date_regex)
+    // console.log(dates)
     const start_date = prevDate(dates[0])
     const end_date = addOneToDate(dates[dates.length-1])
 
@@ -114,16 +119,21 @@ function startAnalysis(group){
     
     msgs = chat.match(message_regex)
     words = chat.match(word_regex)
+    // console.log(chat)
+    // console.log(msgs.length,words.length)
     // console.log(msgs.length)
 
 
     // Find all members..
     for(i=0;i<msgs.length;i++){
-        person = msgs[i].substring(0,msgs[i].length-1).split(' - ')[1]
+        // person = msgs[i].substring(0,msgs[i].length-1).split(' - ')[1]
+        person = msgs[i].substring(0,msgs[i].length-1).split('] ')[1]
         if(person in members == false){
             members[person] = 1
         }
     }
+
+    // console.log(members)
 
     alphabetical = Object.keys(members).sort()
     for(i=0;i<alphabetical.length;i++) members[alphabetical[i]] = i
@@ -164,7 +174,8 @@ function startAnalysis(group){
         dt = msgs[i].match(date_regex)[0]
         // console.log(dt)
         if(!(dt in msg_counts)) {msg_counts[dt] = {...msg_counts[prevDt]}; prevDt = dt}
-        person = msgs[i].substring(0,msgs[i].length-1).split(' - ')[1]
+        // person = msgs[i].substring(0,msgs[i].length-1).split(' - ')[1]
+        person = msgs[i].substring(0,msgs[i].length-1).split('] ')[1]
         if(person in members) msg_counts[dt][person] += 1
 
         // console.log(msgs[i])
@@ -175,7 +186,8 @@ function startAnalysis(group){
         dt = words[i].match(date_regex)[0]
         if(!(dt in word_counts)) {word_counts[dt] = {...word_counts[prevDt]}; prevDt = dt}
         meta = words[i].match(message_regex)[0]
-        person = meta.substring(0,meta.length-1).split(' - ')[1]
+        // person = meta.substring(0,meta.length-1).split(' - ')[1]
+        person = meta.substring(0,meta.length-1).split('] ')[1]
 
         text = words[i].split(message_regex)[1]
         // console.log(person)
