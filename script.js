@@ -29,6 +29,8 @@ const brcolours = [
     'rgba(255, 159, 64, 1)',
 ]
 
+const FILE_TYPE = 'old' // 'new'
+
 var chat
 document.getElementById('inputfile') 
     .addEventListener('change', function() { 
@@ -84,12 +86,16 @@ function prevDate(d){
     return arr[0]+'/'+arr[1]+'/'+arr[2]
 }
 
-// message_regex = /\d{2}\/\d{2}\/\d{4}, \d+:\d+ [ap]m - [a-zA-Z 0-9+]+:/g
-// word_regex = /\d{2}\/\d{2}\/\d{4}, \d+:\d+ [ap]m - [a-zA-Z 0-9+]+: ([\s\S]*?)\d{2}\/\d{2}\/\d{4}, \d+:\d+ [ap]m - [a-zA-Z 0-9+]+: /g
-// date_regex = /\d{2}\/\d{2}\/\d{4}/g
-message_regex = /[[]\d{2}\/\d{2}\/\d{2}, \d{2}:\d{2}:\d{2}[\]] [a-zA-Z 0-9+]+:/g
-word_regex = /[[]\d{2}\/\d{2}\/\d{2}, \d{2}:\d{2}:\d{2}[\]] [a-zA-Z 0-9+]+: ([\s\S]*?)[[]\d{2}\/\d{2}\/\d{2}, \d{2}:\d{2}:\d{2}[\]] [a-zA-Z 0-9+]+: /g
-date_regex = /\d{2}\/\d{2}\/\d{2}/g
+if (FILE_TYPE == 'old'){
+    message_regex = /\d{2}\/\d{2}\/\d{4}, \d+:\d+ [ap]m - [a-zA-Z 0-9+]+:/g
+    word_regex = /\d{2}\/\d{2}\/\d{4}, \d+:\d+ [ap]m - [a-zA-Z 0-9+]+: ([\s\S]*?)\d{2}\/\d{2}\/\d{4}, \d+:\d+ [ap]m - [a-zA-Z 0-9+]+: /g
+    date_regex = /\d{2}\/\d{2}\/\d{4}/g
+}
+else{
+    message_regex = /[[]\d{2}\/\d{2}\/\d{2}, \d{2}:\d{2}:\d{2}[\]] [a-zA-Z 0-9+]+:/g
+    word_regex = /[[]\d{2}\/\d{2}\/\d{2}, \d{2}:\d{2}:\d{2}[\]] [a-zA-Z 0-9+]+: ([\s\S]*?)[[]\d{2}\/\d{2}\/\d{2}, \d{2}:\d{2}:\d{2}[\]] [a-zA-Z 0-9+]+: /g
+    date_regex = /\d{2}\/\d{2}\/\d{2}/g
+}
     
 
 // const start_date = '30/11/2019'
@@ -107,6 +113,7 @@ function startAnalysis(group){
 
     myChart.options.title.text = 'Time Animations - '+group
 
+    chat = chat.replace(/\s/g,' ');
     // console.log(chat)
     dates = chat.match(date_regex)
     // console.log(dates)
@@ -127,7 +134,7 @@ function startAnalysis(group){
     // Find all members..
     for(i=0;i<msgs.length;i++){
         // person = msgs[i].substring(0,msgs[i].length-1).split(' - ')[1]
-        person = msgs[i].substring(0,msgs[i].length-1).split('] ')[1]
+        person = msgs[i].substring(0,msgs[i].length-1).split(FILE_TYPE=='old' ? ' - ' : '] ')[1]
         if(person in members == false){
             members[person] = 1
         }
@@ -175,7 +182,7 @@ function startAnalysis(group){
         // console.log(dt)
         if(!(dt in msg_counts)) {msg_counts[dt] = {...msg_counts[prevDt]}; prevDt = dt}
         // person = msgs[i].substring(0,msgs[i].length-1).split(' - ')[1]
-        person = msgs[i].substring(0,msgs[i].length-1).split('] ')[1]
+        person = msgs[i].substring(0,msgs[i].length-1).split(FILE_TYPE=='old' ? ' - ' : '] ')[1]
         if(person in members) msg_counts[dt][person] += 1
 
         // console.log(msgs[i])
@@ -187,7 +194,7 @@ function startAnalysis(group){
         if(!(dt in word_counts)) {word_counts[dt] = {...word_counts[prevDt]}; prevDt = dt}
         meta = words[i].match(message_regex)[0]
         // person = meta.substring(0,meta.length-1).split(' - ')[1]
-        person = meta.substring(0,meta.length-1).split('] ')[1]
+        person = meta.substring(0,meta.length-1).split(FILE_TYPE=='old' ? ' - ' : '] ')[1]
 
         text = words[i].split(message_regex)[1]
         // console.log(person)
